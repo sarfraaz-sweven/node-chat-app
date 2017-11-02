@@ -9,11 +9,16 @@ socket.on('disconnect',function () {
 });
 
 socket.on('newMessage',function(message) {
-  console.log('New Message',message);
+
   var formattedTimestamp = moment(message.CreatedAt).format('h:mm a');
-  var li = $('<li></li>');
-  li.text(`${message.from}: ${formattedTimestamp} :${message.text}`);
-  $('#messages').append(li);
+  var template = $('#message-template').html();
+  var html = Mustache.render(template,{
+    text:message.text,
+    from: message.from,
+    createdAt: formattedTimestamp
+  });
+
+  $('#messages').append(html);
 });
 
 $('#message-form').on('submit',function(e){
