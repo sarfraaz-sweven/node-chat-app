@@ -27,7 +27,7 @@ io.on('connection',(socket)=>{
     socket.join(params.room);
 
     socket.emit('newMessage',generateMessage('Admin','Welcome to chatroom!'));
-    socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin',`${params.name} User Joined`));
+    socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin',`${params.name} Joined`));
     callback();
   });
 
