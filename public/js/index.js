@@ -10,16 +10,10 @@ socket.on('disconnect',function () {
 
 socket.on('newMessage',function(message) {
   console.log('New Message',message);
+  var formattedTimestamp = moment(message.CreatedAt).format('h:mm a');
   var li = $('<li></li>');
-  li.text(`${message.from}: ${message.text}`);
+  li.text(`${message.from}: ${formattedTimestamp} :${message.text}`);
   $('#messages').append(li);
-});
-
-socket.emit('createMessage',{
-  'from':'Sarfraaz',
-  'text':'Hey, whatsapp?'
-},function(message){
-  console.log('Git it!',message);
 });
 
 $('#message-form').on('submit',function(e){
