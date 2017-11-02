@@ -2,10 +2,10 @@ var socket = io();
 socket.on('connect',function () {
   console.log('Connected to server');
 
-  socket.emit('createMessage',{
-    'to':'Sarfraaz',
-    'text':'Hey, whatsapp?'
-  });
+  // socket.emit('createMessage',{
+  //   'to':'Sarfraaz',
+  //   'text':'Hey, whatsapp?'
+  // });
 });
 
 socket.on('disconnect',function () {

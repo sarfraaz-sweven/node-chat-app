@@ -16,9 +16,14 @@ io.on('connection',(socket)=>{
   console.log('New User Connected');
 
   socket.emit('newMessage',{
-    'from':'Irshad',
-    'text':'Hey bro!',
-    'createdAt':123
+    'from':'Admin',
+    'text':'Welcome to chatroom!',
+    'createdAt':new Date().getTime()
+  });
+  socket.broadcast.emit('newMessage',{
+    'from':'Admin',
+    'text':'New User Joined',
+    'createdAt':new Date().getTime()
   });
 
   socket.on('disconnect',()=>{
@@ -27,7 +32,14 @@ io.on('connection',(socket)=>{
 
   socket.on('createMessage',(newMessage)=>{
     console.log('New Message Received',newMessage);
+    io.emit('newMessage',{
+      from:newMessage.from,
+      text:newMessage.text,
+      createdAt: new Date().getTime()
+    });
   });
+
+
 });
 
 server.listen(port,()=>{
