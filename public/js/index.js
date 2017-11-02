@@ -25,10 +25,12 @@ socket.emit('createMessage',{
 $('#message-form').on('submit',function(e){
   e.preventDefault();
 
+  var messageTextBox = $('input[name="message"]');
+
   socket.emit('createMessage',{
     from: 'User',
-    text: $('input[name="message"]').val()
+    text: messageTextBox.val()
   },function(){
-
+    messageTextBox.val('');
   });
 })

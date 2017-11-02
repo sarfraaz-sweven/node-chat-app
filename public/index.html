@@ -2,16 +2,25 @@
 <html>
   <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
   </head>
-  <body>
-    <h4>Welcome to the fastest chat app on the internet!</h4>
+  <body class="chat">
+    <div class="chat__sidebar">
+      <h3>People</h3>
+      <div id="users"></div>
+    </div>
 
-    <ol id="messages"></ol>
+    <div class="chat__main">
+      <ol id="messages" class="chat__messages"></ol>
 
-    <form id="message-form">
-      <input name="message" type="text" placeholder="Enter Message"/>
-      <button>send</button>
-    </form>
+      <div class="chat__footer">
+        <form id="message-form">
+          <input name="message" autofocus autocomplete="off" type="text" placeholder="Enter Message"/>
+          <button>send</button>
+        </form>
+      </div>
+    </div>
+
   </body>
   <script src="/socket.io/socket.io.js"></script>
   <script
