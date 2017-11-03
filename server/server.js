@@ -47,9 +47,11 @@ io.on('connection',(socket)=>{
   });
 
   socket.on('createMessage',(newMessage,callback)=>{
-    console.log('New Message Received',newMessage);
-    io.emit('newMessage',generateMessage(newMessage.from,newMessage.text));
-    callback('This is from the server');
+    var user = users.getUser(socket.id);
+    if(user && isRealString(newMessage.text)) {
+      io.to(user.room).emit('newMessage',generateMessage(user.name,newMessage.text));
+    }
+    callback();
   });
 
 });

@@ -1,7 +1,5 @@
 var socket = io();
 
-var myName;
-
 function scrollToBottom(){
   var messages = $('#messages');
   var newMessage = messages.children('li:last-child');
@@ -69,7 +67,6 @@ $('#message-form').on('submit',function(e){
   var messageTextBox = $('input[name="message"]');
 
   socket.emit('createMessage',{
-    from: myName,
     text: messageTextBox.val()
   },function(){
     messageTextBox.val('');
