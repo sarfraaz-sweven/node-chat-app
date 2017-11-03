@@ -40,6 +40,27 @@ io.on('connection',(socket)=>{
     users.removeUser(socket.id);
     users.addUser(socket.id,params.name,room,params.random);
 
+    if(users.getCount(room) === 2)
+    {
+      var seq = users.getSequence(room);
+      if(seq.first === socket.id)
+      {
+        socket.emit('startGame','o');
+        socket.emit('yourMove');
+        socket.to(seq.second).emit('startGame','x');
+        socket.to(seq.second).emit('opponentMove');
+      }
+      else
+      {
+        socket.emit('opponentMove');
+        socket.emit('startGame','x');
+        socket.to(seq.first).emit('yourMove');
+        socket.to(seq.second).emit('startGame','');
+      }
+      console.log('Move ',seq.first);
+      console.log('Opponent ',seq.second);
+    }
+
     io.to(room).emit('updateUserList',users.getUserList(room));
     socket.emit('newMessage',generateMessage('Admin','Welcome to chatroom!'));
     socket.broadcast.to(room).emit('newMessage',generateMessage('Admin',`${params.name} Joined`));
@@ -54,6 +75,30 @@ io.on('connection',(socket)=>{
       io.to(user.room).emit('updateUserList',users.getUserList(user.room));
       io.to(user.room).emit('newMessage',generateMessage('Admin',`${user.name} left the chatroom`));
     }
+  });
+
+  socket.on('makeMove',(position,callback)=>{
+    var move = users.plotMove(socket.id,position);
+    var otherUser = users.getOther(socket.id);
+    socket.to(otherUser).emit('moveMade',{move,position});
+    socket.emit('moveMade',{move,position});
+    socket.to(otherUser).emit('yourMove');
+    socket.emit('opponentMove');
+    var result = users.getResult(move);
+    if(result)
+    {
+      socket.to(otherUser).emit('endGame',0);
+      socket.emit('endGame',1);
+    }
+    else{
+      var moveLeft = users.moveLeft();
+      if(!moveLeft)
+      {
+        socket.to(otherUser).emit('endGame',2);
+        socket.emit('endGame',2);
+      }
+    }
+    callback();
   });
 
   socket.on('createMessage',(newMessage,callback)=>{
