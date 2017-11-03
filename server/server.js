@@ -20,19 +20,29 @@ io.on('connection',(socket)=>{
   console.log('New User Connected');
 
   socket.on('join',(params,callback) => {
-    if(!isRealString(params.name) || !isRealString(params.room))
+
+    if(!isRealString(params.name))
     {
-      return callback('Name & roomm name are required');
+      return callback('Name is required');
     }
 
-    socket.join(params.room);
+    var room ;
+
+    if(!isRealString(params.room)) {
+      params.random = true;
+      room = users.getRandomRoom();
+    } else {
+      params.random = false;
+      room = params.room;
+    }
+
+    socket.join(room);
     users.removeUser(socket.id);
-    users.addUser(socket.id,params.name,params.room);
+    users.addUser(socket.id,params.name,room,params.random);
 
-    io.to(params.room).emit('updateUserList',users.getUserList(params.room));
-
+    io.to(room).emit('updateUserList',users.getUserList(room));
     socket.emit('newMessage',generateMessage('Admin','Welcome to chatroom!'));
-    socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin',`${params.name} Joined`));
+    socket.broadcast.to(room).emit('newMessage',generateMessage('Admin',`${params.name} Joined`));
     callback();
   });
 

@@ -39,7 +39,7 @@ socket.on('disconnect',function () {
 });
 
 socket.on('updateUserList', function (users) {
-  console.log(users);
+  console.log("aaye"+users);
   var ol = $('<ol></ol>');
   users.forEach(function (user){
     ol.append($('<li></li>').text(user));
