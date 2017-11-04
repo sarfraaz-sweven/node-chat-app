@@ -1,5 +1,4 @@
 var socket = io();
-var myMove = 'o';
 
 function scrollToBottom(){
   var messages = $('#messages');
@@ -44,19 +43,17 @@ socket.on('connect',function () {
 });
 
 socket.on('startGame',function(move){
-  myMove = move;
+  $('#my-move').html(`Your token is ${move}`);
 });
 
 socket.on('yourMove',function(){
   console.log('Move AAya');
   $('#game-status').html('Your Move');
-  $('td').on('click.disabled', false);
 });
 
 socket.on('opponentMove',function(){
   console.log('Move GAya');
   $('#game-status').html('Opponent is making a Move');
-  $('td').off('click.disabled');
 });
 
 socket.on('moveMade',function(data){
@@ -65,12 +62,17 @@ socket.on('moveMade',function(data){
 });
 
 socket.on('endGame',function(res){
-  if(res)
-    $('#game-status').html('Congrats! You Won!');
-  else {
+  if(res === 0)
     $('#game-status').html('Ahh, you lost! Better Luck next time.');
-  }
+  else if(res === 1)
+    $('#game-status').html('Congrats! You Won!');
+  else if(res === 2)
+    $('#game-status').html('Both were awesome, Its a tie!');
   console.log(data);
+});
+
+socket.on('resetGame',function(res){
+  location.reload();
 });
 
 socket.on('disconnect',function () {
@@ -131,8 +133,5 @@ $('td').on('click',function(e){
     var id = $(this).attr('position');
     console.log('Clicked : '+$(this).data('position'));
     socket.emit('makeMove',$(this).data('position'),function(move){});
-  }
-  else {
-    $('#game-status').html('Move Already made here');
   }
 });
