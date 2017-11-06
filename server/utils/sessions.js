@@ -115,10 +115,16 @@ class Sessions {
   myCurrentMove(room,id)
   {
     var session = this.getSession(room);
-    if(session.currentMove === id)
-      return true;
+    if(session)
+    {
+      if(session.currentMove === id)
+        return true;
+      else {
+        return false;
+      }
+    }
     else {
-      return false;
+        return false;
     }
   }
 }

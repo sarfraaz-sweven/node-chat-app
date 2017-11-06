@@ -45,19 +45,23 @@ class Users {
 
   getOther (id)
   {
-    var user = this.users.filter((user)=> user.id !== id)[0];
+    var room = this.users.filter((user)=> user.id === id)[0].room;
+    var user = this.users.filter((user)=> {
+      if(user.room === room)
+      {
+        if(user.id !== id)
+          return user;
+      }
+    })[0];
+
     return user;
   }
 
-  // getUserList (room)
-  // {
-  //   var users = this.users.filter((user)=> user.room === room);
-  //   var namesArray = users.map((user) => _.pick(user,['name','index']));
-  //   return namesArray;
-  // }
-
-  getUserList() {
-    return this.users;
+  getUserList (room)
+  {
+    var users = this.users.filter((user)=> user.room === room);
+    var namesArray = users.map((user) => _.pick(user,['name','index']));
+    return namesArray;
   }
 
   getCount (room) {
@@ -87,7 +91,14 @@ class Users {
         }
       }
     })[0];
-    this.users = [seq.first,seq.second];
+    var others = this.users.filter((user)=> {
+      if(user.room !== room)
+          return user;
+    });
+    this.users = others;
+    this.users.push(seq.first);
+    this.users.push(seq.second);
+    console.log(this.users);
     return seq;
   }
 

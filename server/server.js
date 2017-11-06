@@ -42,9 +42,6 @@ io.on('connection',(socket)=>{
     users.removeUser(socket.id);
     users.addUser(socket.id,params.name,room,params.random);
 
-    var userList = users.getUserList();
-    console.log('Users : ',userList);
-
     if(users.getCount(room) === 2)
     {
       var seq = users.getSequence(room);
@@ -88,9 +85,6 @@ io.on('connection',(socket)=>{
 
   socket.on('makeMove',(position,callback)=>{
     console.log('Move request Received.');
-    var userList = users.getUserList();
-    console.log('id : ',socket.id);
-    console.log('Users : ',userList);
     var thisUser = users.getUser(socket.id);
     var otherUser = users.getOther(socket.id);
     if(sessions.myCurrentMove(thisUser.room,thisUser.id))
